@@ -3,8 +3,10 @@ package com.sample.concurrency.threadpool;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import javax.annotation.PreDestroy;
 
@@ -55,9 +57,30 @@ public class SampleController {
 	@PreDestroy
 	private void destroy() {
 		if(executor != null) {
-			executor.shutdownNow();
-			System.out.println("executor.isShutdown() = " + executor.isShutdown());
-			System.out.println("executor.isTerminated() = " + executor.isTerminated());
+			executor.shutdown();
+			try {
+				boolean isPoolTerminated = executor.awaitTermination(10, TimeUnit.SECONDS);
+				if(isPoolTerminated) {
+					System.out.println("Flag true after await Termination");
+					System.out.println("executor.isShutdown() = " + executor.isShutdown());
+					System.out.println("executor.isTerminated() = " + executor.isTerminated());
+				}else {
+					System.out.println("Flag false after await Termination");
+					List<Runnable> mList = executor.shutdownNow();
+					System.out.println("Number of tasks that did not start execution = " + mList.size());
+					boolean isPoolTerminatedNow = executor.awaitTermination(10, TimeUnit.SECONDS);
+					if(isPoolTerminatedNow) {
+						System.out.println("Flag true after shutdown now and await Termination");
+						System.out.println("executor.isShutdown() = " + executor.isShutdown());
+						System.out.println("executor.isTerminated() = " + executor.isTerminated());
+					}else {
+						System.out.println("Pool not terminated");
+					}
+				}
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			
 		}
 	}
 }
