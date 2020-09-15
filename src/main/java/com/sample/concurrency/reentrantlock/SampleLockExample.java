@@ -13,14 +13,13 @@ import java.util.concurrent.locks.ReentrantLock;
  * @author AANU
  *
  */
-public class SampleLock {
+public class SampleLockExample {
 	private ReentrantLock mLock = new ReentrantLock();
 	
 	
-	public static void main(String[] args){
-		
-		SampleLock sampleLock = new SampleLock();
-		sampleLock.testLocks();
+	public static void main(String[] args){	
+		SampleLockExample sampleLockExample = new SampleLockExample();
+		sampleLockExample.testLocks();
 	}
 	
 	private void testLocks() {

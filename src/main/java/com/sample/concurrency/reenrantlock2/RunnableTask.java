@@ -1,4 +1,4 @@
-package com.sample.concurrency.synchronizers;
+package com.sample.concurrency.reenrantlock2;
 
 import java.util.concurrent.CountDownLatch;
 
